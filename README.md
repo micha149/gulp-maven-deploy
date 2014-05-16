@@ -3,7 +3,7 @@ gulp-maven-deploy
 
 A [Gulp](//gulpjs.com/) wrapper for the [maven-deploy](https://www.npmjs.org/package/maven-deploy) module.
 
-[![Build Status](https://api.travis-ci.org/gardr/host.png?branch=master)](https://travis-ci.org/gulp-maven-deploy)
+[![Build Status](https://api.travis-ci.org/finn-no/gulp-maven-deploy.png?branch=master)](https://travis-ci.org/finn-no/gulp-maven-deploy)
 [![NPM](https://nodei.co/npm/gulp-maven-deploy.png?stars=true&downloads=true)](https://npmjs.org/package/gulp-maven-deploy)
 
 
