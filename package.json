@@ -1,0 +1,10 @@
+{
+  "name": "gulp-maven-deploy",
+  "version": "0.0.1",
+  "devDependencies": {
+    "maven-deploy": "0.0.2",
+    "through2": "^0.4.1",
+    "mocha": "^1.18.2",
+    "referee": "^1.0.3"
+  }
+}
