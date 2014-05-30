@@ -1,31 +1,31 @@
 {
   "name": "gulp-maven-deploy",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Simple gulp plugin for the maven-deploy module",
   "main": "index.js",
   "scripts": {
-  	"test": "./node_modules/.bin/mocha"
+    "test": "./node_modules/.bin/mocha"
   },
   "keywords": [
-  	"maven",
-  	"gulp",
-  	"gulp-plugin",
-  	"deploy"
+    "maven",
+    "gulp",
+    "gulp-plugin",
+    "deploy"
   ],
   "homepage": "https://github.com/finn-no/gulp-maven-deploy",
   "bugs": "https://github.com/finn-no/gulp-maven-deploy/issues",
   "repository": {
-  	"type": "git",
+    "type": "git",
     "url": "git@github.com:finn-no/gulp-maven-deploy.git"
   },
   "author": "FINN.no AS",
   "contributors": [
-  	"Espen Dalløkken <espen.dallokken@finn.no>"
+    "Espen Dalløkken <espen.dallokken@finn.no>"
   ],
   "licence": "MIT",
   "dependencies": {
     "maven-deploy": "0.0.2",
-    "through2": "^0.4.1"  	
+    "through2": "^0.4.1"
   },
   "devDependencies": {
     "mocha": "^1.18.2",
