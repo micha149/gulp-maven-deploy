@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-node_modules
-*.log
-=======
 # Logs
 logs
 *.log
@@ -27,4 +23,3 @@ build/Release
 # Deployed apps should consider commenting this line out:
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules
->>>>>>> 41d0b3e6c1494998b7779732ec590feb0a6d39ba

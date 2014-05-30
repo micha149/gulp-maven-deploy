@@ -14,7 +14,9 @@ All the samples below requires a basic understanding of [Gulp](//gulpjs.com/) an
 
 ## Sample usage in a gulpfile.js
 
-Configuring a task for deploying to a Maven proxy:
+Below are two configuration samples:
+
+Configuring a task for deploying to a Maven proxy
 
 	var maven = require('gulp-maven-deploy');
 
@@ -49,6 +51,15 @@ A task running a local Maven install:
 	});
 
 Note: A local install in Maven means it is only available on your machine. A deployment is different as it means you ship the artifact off to some remote repository.
+
+## Sample project
+
+There is a complete sample project if you checkout the [samples](./samples) directory. 
+
+	$ npm install
+	$ ./node_modules/.bin/gulp
+
+This will install gulp and allow you to run the sample. Gulp will run with with a local deploy configuration. You should see an artifact in the dist folder and a file deployed to your local _M2_HOME_ repository.
 
 ## Running tests
 
