@@ -1,26 +1,44 @@
 'use strict';
-var through = require('through2');
-var gmd = require('maven-deploy');
 
-var deploy = function(remote, options){
+var gmd = require('maven-deploy');
+var through = require('through2');
+
+function hasValidConfig(options) {
 	options = options || {};
 	if (!options.hasOwnProperty('config') || typeof options.config !== 'object') {
 		throw new Error('Missing required property "config" object.');
 	}
+	return true;
+}
 
-	return through.obj(function (file, enc, cb) {
-		gmd.config(options.config);
-		if (options.hasOwnProperty('deploy')){
-			if (!options.hasOwnProperty('repositoryId') || !options.hasOwnProperty('snapshot')){
-				throw new Error('Deploy required "repositoryId" and "snapshot".')
+var deploy = function(options, callback) {
+	if (hasValidConfig(options)) {
+		return through.obj(function(file, enc, cb) {
+			gmd.config(options.config);
+			if (!options.config.hasOwnProperty('repositories')) {
+				callback(new Error('Missing repositories configuration'));
 			}
-			gmd.deploy(options.repositoryId, options.snapshot);
-		} else {
-			gmd.install();
-		}
-	});
+			options.config.repositories.forEach(function(repo) {
+				if (!repo.hasOwnProperty('id') || !repo.hasOwnProperty('url')) {
+					throw new Error('Deploy required "id" and "url".')
+				}
+				gmd.deploy(repo.id, repo.url);
+				callback(null);
+			});
+		});
+	}
 };
 
-module.exports.deploy = deploy.bind(null, true);
+var install = function(options, callback) {
+	if (hasValidConfig(options)) {
+		return through.obj(function(file, enc, cb) {
+			gmd.config(options.config);
+			gmd.install();
+			if (callback) callback(null);
+		});
+	}
+	if (callback) callback(new Error('Invalid configuration'));
+}
 
-module.exports.install = deploy.bind(null, false);
+module.exports.deploy = deploy.bind(this);
+module.exports.install = install.bind(this);

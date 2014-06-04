@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 var maven = require('../index');
 
-gulp.task('deploy', function(){
+gulp.task('deploy-remote', function(){
 	gulp.src('.')
 		.pipe(maven.deploy({
 		'config': {

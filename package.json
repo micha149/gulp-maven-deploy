@@ -1,6 +1,6 @@
 {
   "name": "gulp-maven-deploy",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Simple gulp plugin for the maven-deploy module",
   "main": "index.js",
   "scripts": {
@@ -25,10 +25,11 @@
   "licence": "MIT",
   "dependencies": {
     "maven-deploy": "0.0.2",
-    "through2": "^0.4.1"
+    "through2": "*"
   },
   "devDependencies": {
     "mocha": "^1.18.2",
-    "referee": "^1.0.3"
+    "referee": "^1.0.3",
+    "sinon": "^1.10.2"
   }
 }
