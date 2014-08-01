@@ -22,7 +22,7 @@ var deploy = function(options, callback) {
 				if (!repo.hasOwnProperty('id') || !repo.hasOwnProperty('url')) {
 					throw new Error('Deploy required "id" and "url".')
 				}
-				gmd.deploy(repo.id, repo.url);
+				gmd.deploy(repo.id, options.config.snapshot);
 				if (callback)callback(null);
 			});
 		});
