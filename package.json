@@ -24,7 +24,7 @@
   ],
   "licence": "MIT",
   "dependencies": {
-    "maven-deploy": "0.0.2",
+    "maven-deploy": "0.0.3",
     "through2": "*"
   },
   "devDependencies": {
