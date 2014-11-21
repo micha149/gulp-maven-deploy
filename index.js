@@ -22,10 +22,10 @@ var deploy = function(options, callback) {
 				if (!repo.hasOwnProperty('id') || !repo.hasOwnProperty('url')) {
 					throw new Error('Deploy required "id" and "url".')
 				}
-				gmd.deploy(repo.id, options.config.snapshot, function () {
-					if (cb) cb(null);
-					if (callback)callback(null);
+				gmd.deploy(repo.id, options.config.snapshot, function (err) {
+					if (cb) cb(err);
 				});
+				if (callback)callback(null);
 			});
 		});
 	}
@@ -35,10 +35,10 @@ var install = function(options, callback) {
 	if (hasValidConfig(options)) {
 		return through.obj(function(file, enc, cb) {
 			gmd.config(options.config);
-			gmd.install(function () {
-				if (cb)cb(null);
-				if (callback) callback(null);
+			gmd.install(function (err) {
+				if (cb)cb(err);
 			});
+			if (callback)callback(null);
 		});
 	}
 	throw new Error('Invalid configuration');
