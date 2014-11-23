@@ -4,6 +4,9 @@ gulp-maven-deploy
 A [Gulp](//gulpjs.com/) wrapper for the [maven-deploy](https://www.npmjs.org/package/maven-deploy) module. Enables you to have projects which are built with Gulp, but deploys to Maven repositories. 
 
 [![Build Status](https://api.travis-ci.org/finn-no/gulp-maven-deploy.png?branch=master)](https://travis-ci.org/finn-no/gulp-maven-deploy)
+[![Dependency Status](https://david-dm.org/finn-no/gulp-maven-deploy.png)](https://david-dm.org/finn-no/gulp-maven-deploy)
+[![devDependency Status](https://david-dm.org/finn-no/gulp-maven-deploy/dev-status.png)](https://david-dm.org/finn-no/gulp-maven-deploy#info=devDependencies)
+
 [![NPM](https://nodei.co/npm/gulp-maven-deploy.png?stars=true&downloads=true)](https://npmjs.org/package/gulp-maven-deploy)
 
 All the samples below requires a basic understanding of [Gulp](//gulpjs.com/) and [Maven](http://maven.apache.org/). Please look at the documentation for those projects for details. 
