@@ -24,12 +24,11 @@
   ],
   "licence": "MIT",
   "dependencies": {
-    "maven-deploy": "0.0.3",
-    "through2": "*"
+    "maven-deploy": "^1.1.0",
+    "through2": "^1.1.1"
   },
   "devDependencies": {
-    "mocha": "^1.18.2",
-    "referee": "^1.0.3",
-    "gulp-util": "^2.2.16"
+    "mocha": "^2.1.0",
+    "referee": "^1.0.3"
   }
 }

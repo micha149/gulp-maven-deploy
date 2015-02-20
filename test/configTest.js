@@ -1,7 +1,5 @@
 var referee = require('referee');
 var fs = require('fs');
-var path = require('path');
-var gutil = require('gulp-util');
 var gmdp = require('../index');
 var pkg = require('../package');
 
