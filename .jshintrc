@@ -1,0 +1,6 @@
+{
+    "extends": "./node_modules/finn-js-code-style/.jshintrc",
+    "browser": false,
+    "node": true,
+    "maxstatements": 10
+}
