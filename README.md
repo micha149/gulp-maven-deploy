@@ -1,11 +1,6 @@
 gulp-maven-deploy
 =================
 
-## Help needed!
-I worte this module because it solved a problem at my pervious gig, however I no longer work in a Java world and I'm not really using Gulp a lot either. If anyone wants to take over or help out, that would be awesome.
-
-
-
 A [Gulp](//gulpjs.com/) wrapper for the [maven-deploy](https://www.npmjs.org/package/maven-deploy) module. Enables you to have projects which are built with Gulp, but deploys to Maven repositories. 
 
 [![Build Status](https://api.travis-ci.org/leftieFriele/gulp-maven-deploy.png?branch=master)](https://travis-ci.org/leftieFriele/gulp-maven-deploy)

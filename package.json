@@ -1,6 +1,6 @@
 {
   "name": "gulp-maven-deploy",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Simple gulp plugin for the maven-deploy module",
   "main": "index.js",
   "scripts": {
@@ -12,13 +12,8 @@
     "gulp-plugin",
     "deploy"
   ],
-  "homepage": "https://github.com/leftieFriele/gulp-maven-deploy",
-  "bugs": "https://github.com/leftieFriele/gulp-maven-deploy/issues",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:leftieFriele/gulp-maven-deploy.git"
-  },
-  "author": "Espen Dalløkken",
+  "repository": "git://github.com/micha149/gulp-maven-deploy",
+  "author": "Michael van Engelshoven <michael@van-engelshoven.de>",
   "contributors": [
     "Espen Dalløkken <leftie.friele@gmail.com>"
   ],
