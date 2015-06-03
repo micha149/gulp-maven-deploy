@@ -1,10 +1,10 @@
 {
   "name": "gulp-maven-deploy",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Simple gulp plugin for the maven-deploy module",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha"
+    "test": "mocha && jshint index.js sample/**"
   },
   "keywords": [
     "maven",
@@ -23,6 +23,7 @@
     "through2": "^1.1.1"
   },
   "devDependencies": {
+    "jshint": "^2.8.0",
     "mocha": "^2.1.0",
     "referee": "^1.0.3"
   }

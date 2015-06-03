@@ -1,3 +1,4 @@
+/*globals describe, it*/
 var referee = require('referee');
 var fs = require('fs');
 var gmdp = require('../index');
@@ -5,7 +6,6 @@ var pkg = require('../package');
 
 describe('Gulp Maven Deploy plugin', function() {
 	var assert = referee.assert;
-	var refute = referee.refute;
 
 	if (!fs.existsSync('./dist')) {
 		fs.mkdirSync('./dist');
@@ -18,8 +18,6 @@ describe('Gulp Maven Deploy plugin', function() {
 	});
 
 	describe('Required configuration', function() {
-		var emptyConfig = {};
-
 		it('should throw error on missing "config" property', function() {
 			allFunctions(function(fn) {
 				assert.exception(function() {
