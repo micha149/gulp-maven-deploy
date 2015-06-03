@@ -1,6 +1,21 @@
 {
-    "extends": "./node_modules/finn-js-code-style/.jshintrc",
+    "bitwise":  true,
     "browser": false,
+    "camelcase":  true,
+    "curly": true,
+    "eqeqeq": true,
+    "expr": true,
+    "forin": true,
+    "immed": true,
+    "indent": 4,
+    "latedef": false,
+    "newcap": true,
+    "noarg": true,
     "node": true,
-    "maxstatements": 10
+    "noempty": true,
+    "nonew": true,
+    "sub": true,
+    "trailing": true,
+    "undef": true,
+    "unused": true
 }
