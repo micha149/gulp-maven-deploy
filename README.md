@@ -39,6 +39,28 @@ Configuring a task for deploying to a Maven proxy
 		}))
 	});
 
+Configuring a task for deploying multiple files to a Maven proxy
+
+	var maven = require('gulp-maven-deploy');
+
+	gulp.task('deploy', function(){
+		gulp.src('*')
+        .pipe(maven.deploy(function (fileParsed) {
+                return {
+                    'config': {
+                        'groupId': 'com.mygroup',
+                        'artifactId': fileParsed.name,
+                        'type': fileParsed.extname, 
+                        'repositories': [{
+                            'id': 'some-repo-id',
+                            'url': 'http://some-repo/url'
+                        }]
+                    }
+                };
+            }
+        ))
+	});
+
 A task running a local Maven install:
 
 	var maven = require('gulp-maven-deploy');

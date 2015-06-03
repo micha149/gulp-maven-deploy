@@ -27,5 +27,23 @@ gulp.task('deploy-local', function(){
 	}))
 });
 
+gulp.task('deploy-files', function () {
+    gulp.src('*')
+        .pipe(maven.deploy(function (fileParsed) {
+                return {
+                    'config': {
+                        'groupId': 'com.mygroup',
+                        'artifactId': fileParsed.name,
+                        'type': fileParsed.extname,
+                        'classifier': 'android',
+                        'repositories': [{
+                            'id': 'some-repo-id',
+                            'url': 'http://some-repo/url'
+                        }]
+                    }
+                };
+            }
+        ))
+});
 
 gulp.task('default', ['deploy-local']);
