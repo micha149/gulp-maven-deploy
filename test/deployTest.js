@@ -6,11 +6,11 @@ var plugin = require('../index.js'),
 
 describe('gulp-maven-deploy plugin', function () {
 
-    var fileA, fileB;
+    var fileA, fileB, testConfig;
 
     beforeEach(function () {
-        sinon.stub(mavenDeploy, 'config')
-        sinon.stub(mavenDeploy, 'deploy')
+        sinon.stub(mavenDeploy, 'config');
+        sinon.stub(mavenDeploy, 'deploy');
 
         fileA = new Vinyl({
             cwd: "/home/jdoe/gulp-maven-deploy/",
@@ -25,6 +25,16 @@ describe('gulp-maven-deploy plugin', function () {
             path: "/home/jdoe/gulp-maven-deploy/test/fileB.txt",
             contents: new Buffer('some content of file B')
         });
+
+        testConfig = {
+            'finalName': 'myPackage.war',
+            'groupId': 'com.mygroup',
+            'type': 'war',
+            'repositories': [{
+                'id': 'some-repo-id',
+                'url': 'http://some-repo/url'
+            }]
+        };
     });
 
     afterEach(function () {
@@ -45,47 +55,64 @@ describe('gulp-maven-deploy plugin', function () {
         });
 
         it('passes processed config to maven-deploy module', function () {
-            var expectedConfig = {
-                'finalName': 'myPackage.war',
-                'groupId': 'com.mygroup',
-                'type': 'war',
-                'repositories': [{
-                    'id': 'some-repo-id',
-                    'url': 'http://some-repo/url'
-                }]
-            };
-
-            var stream = plugin.deploy({config: expectedConfig});
+            var stream = plugin.deploy({config: testConfig});
 
             stream.write(fileA);
             stream.end();
 
-            expect(mavenDeploy.config).to.be.calledWith(expectedConfig);
+            expect(mavenDeploy.config).to.be.calledWith(testConfig);
         });
 
         it('calls deploy function of maven-deploy for each piped file', function () {
-            var expectedConfig = {
-                'finalName': 'myPackage.war',
-                'groupId': 'com.mygroup',
-                'type': 'war',
-                'repositories': [{
-                    'id': 'some-repo-id',
-                    'url': 'http://some-repo/url'
-                }]
-            };
-
             // Call install callback with no error
             mavenDeploy.deploy.yields(null);
 
-            var stream = plugin.deploy({config: expectedConfig});
+            var stream = plugin.deploy({config: testConfig});
 
             stream.write(fileA);
             stream.write(fileB);
             stream.end();
 
             expect(mavenDeploy.deploy).to.be.calledTwice;
-            expect(mavenDeploy.deploy).to.be.calledWith(expectedConfig.repositories[0].id);
-            expect(mavenDeploy.deploy).to.be.calledWith(expectedConfig.repositories[0].id);
+            expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[0].id);
+            expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[0].id);
+        });
+
+        it('calls callback with null if deploy is done', function(done) {
+            var spy = sinon.spy(),
+                stream = plugin.deploy({config: testConfig}, spy);
+
+            // Call install callback with no error
+            mavenDeploy.deploy.yields(null);
+
+            stream.write(fileA);
+            stream.write(fileB);
+
+            expect(spy).not.to.be.called;
+
+            stream.end();
+
+            process.nextTick(function() {
+                expect(spy).to.be.calledOnce.and.calledWith(null);
+                done();
+            });
+        });
+
+        it('calls callback with error if an error occurs', function(done) {
+            var spy = sinon.spy(),
+                expectedError = 'An error occured',
+                stream = plugin.deploy({config: testConfig}, spy);
+
+            // Call install callback with no error
+            mavenDeploy.deploy.yields(expectedError);
+
+            stream.write(fileA);
+            stream.end();
+
+            process.nextTick(function() {
+                expect(spy).to.be.calledOnce.and.calledWith(expectedError);
+                done()
+            });
         });
 
         it('calls deploy function of maven-deploy for each configured repository');

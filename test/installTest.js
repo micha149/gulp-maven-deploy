@@ -71,5 +71,42 @@ describe('gulp-maven-deploy plugin', function () {
 
             expect(mavenDeploy.install).to.be.calledTwice;
         });
+
+        it('calls callback with null if installation is done', function(done) {
+            var spy = sinon.spy(),
+                stream = plugin.install({config: {}}, spy);
+
+            // Call install callback with no error
+            mavenDeploy.install.yields(null);
+
+            stream.write(fileA);
+            stream.write(fileB);
+
+            expect(spy).not.to.be.called;
+
+            stream.end();
+
+            process.nextTick(function() {
+                expect(spy).to.be.calledOnce.and.calledWith(null);
+                done()
+            });
+        });
+
+        it('calls callback with error if an error occurs', function(done) {
+            var spy = sinon.spy(),
+                expectedError = 'An error occured',
+                stream = plugin.install({config: {}}, spy);
+
+            // Call install callback with no error
+            mavenDeploy.install.yields(expectedError);
+
+            stream.write(fileA);
+            stream.end();
+
+            process.nextTick(function() {
+                expect(spy).to.be.calledOnce.and.calledWith(expectedError);
+                done()
+            });
+        })
     })
 });

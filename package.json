@@ -19,6 +19,7 @@
   ],
   "licence": "MIT",
   "dependencies": {
+    "async": "^1.2.1",
     "maven-deploy": "^1.1.0",
     "through2": "^1.1.1"
   },
