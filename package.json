@@ -4,7 +4,7 @@
   "description": "Simple gulp plugin for the maven-deploy module",
   "main": "index.js",
   "scripts": {
-    "test": "mocha && jshint index.js sample/**"
+    "test": "mocha --require test/setup.js test/**/*Test.js && jshint index.js sample/**"
   },
   "keywords": [
     "maven",
@@ -23,8 +23,12 @@
     "through2": "^1.1.1"
   },
   "devDependencies": {
+    "chai": "^3.0.0",
     "jshint": "^2.8.0",
     "mocha": "^2.1.0",
-    "referee": "^1.0.3"
+    "referee": "^1.0.3",
+    "sinon": "^1.14.1",
+    "sinon-chai": "^2.8.0",
+    "vinyl": "^0.5.0"
   }
 }
