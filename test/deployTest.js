@@ -115,8 +115,26 @@ describe('gulp-maven-deploy plugin', function () {
             });
         });
 
-        it('calls deploy function of maven-deploy for each configured repository');
+        it('calls deploy function of maven-deploy for each configured repository', function() {
+            mavenDeploy.deploy.yields(null);
 
-        it('throws error if any configured repository id missing id or url property');
+            testConfig.repositories.push({
+                id: 'another-repo-id',
+                url: 'http://another-repo/url'
+            });
+
+            var stream = plugin.deploy({config: testConfig});
+
+            stream.write(fileA);
+            stream.end();
+
+            expect(mavenDeploy.deploy).to.be.calledTwice;
+            expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[0].id);
+            expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[1].id);
+        });
+
+        it('throws error if any configured repository id missing id or url property', function() {
+            
+        });
     })
 });
