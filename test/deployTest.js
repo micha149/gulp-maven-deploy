@@ -133,8 +133,32 @@ describe('gulp-maven-deploy plugin', function () {
             expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[1].id);
         });
 
-        it('throws error if any configured repository id missing id or url property', function() {
-            
+        it('throws error if repository config is missing', function() {
+            expect(function() {
+                plugin.deploy({config: {}})
+            }).to.throw('Missing repositories configuration');
+        });
+
+        it('throws error if any configured repository is missing id property', function() {
+            expect(function() {
+                plugin.deploy({config: {repositories: [{
+                    id: 'some-repo',
+                    url: 'http://some-repo/url'
+                }, {
+                    id: 'only-an-id'
+                }]}})
+            }).to.throw('Deploy required "id" and "url".');
+        });
+
+        it('throws error if any configured repository is missing url property', function() {
+            expect(function() {
+                plugin.deploy({config: {repositories: [{
+                    id: 'some-repo',
+                    url: 'http://some-repo/url'
+                },{
+                    url: 'http://only/an-url'
+                }]}})
+            }).to.throw('Deploy required "id" and "url".');
         });
     })
 });
