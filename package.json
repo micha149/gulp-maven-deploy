@@ -1,6 +1,6 @@
 {
   "name": "gulp-maven-deploy",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Simple gulp plugin for the maven-deploy module",
   "main": "index.js",
   "scripts": {
