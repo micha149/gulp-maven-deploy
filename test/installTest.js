@@ -4,13 +4,15 @@ var plugin = require('../index.js'),
     Vinyl = require('vinyl'),
     mavenDeploy = require('maven-deploy');
 
+/* globals describe: false, it: false, beforeEach: false, afterEach: false */
+
 describe('gulp-maven-deploy plugin', function () {
 
     var fileA, fileB;
 
     beforeEach(function () {
-        sinon.stub(mavenDeploy, 'config')
-        sinon.stub(mavenDeploy, 'install')
+        sinon.stub(mavenDeploy, 'config');
+        sinon.stub(mavenDeploy, 'install');
 
         fileA = new Vinyl({
             cwd: "/home/jdoe/gulp-maven-deploy/",
@@ -88,7 +90,7 @@ describe('gulp-maven-deploy plugin', function () {
 
             process.nextTick(function() {
                 expect(spy).to.be.calledOnce.and.calledWith(null);
-                done()
+                done();
             });
         });
 
@@ -105,8 +107,8 @@ describe('gulp-maven-deploy plugin', function () {
 
             process.nextTick(function() {
                 expect(spy).to.be.calledOnce.and.calledWith(expectedError);
-                done()
+                done();
             });
-        })
-    })
+        });
+    });
 });

@@ -4,6 +4,8 @@ var plugin = require('../index.js'),
     Vinyl = require('vinyl'),
     mavenDeploy = require('maven-deploy');
 
+/* globals describe: false, it: false, beforeEach: false, afterEach: false */
+
 describe('gulp-maven-deploy plugin', function () {
 
     var fileA, fileB, testConfig;
@@ -111,7 +113,7 @@ describe('gulp-maven-deploy plugin', function () {
 
             process.nextTick(function() {
                 expect(spy).to.be.calledOnce.and.calledWith(expectedError);
-                done()
+                done();
             });
         });
 
@@ -135,7 +137,7 @@ describe('gulp-maven-deploy plugin', function () {
 
         it('throws error if repository config is missing', function() {
             expect(function() {
-                plugin.deploy({config: {}})
+                plugin.deploy({config: {}});
             }).to.throw('Missing repositories configuration');
         });
 
@@ -146,7 +148,7 @@ describe('gulp-maven-deploy plugin', function () {
                     url: 'http://some-repo/url'
                 }, {
                     id: 'only-an-id'
-                }]}})
+                }]}});
             }).to.throw('Deploy required "id" and "url".');
         });
 
@@ -157,8 +159,8 @@ describe('gulp-maven-deploy plugin', function () {
                     url: 'http://some-repo/url'
                 },{
                     url: 'http://only/an-url'
-                }]}})
+                }]}});
             }).to.throw('Deploy required "id" and "url".');
         });
-    })
+    });
 });
