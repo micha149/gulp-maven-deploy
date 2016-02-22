@@ -72,33 +72,15 @@ describe('gulp-maven-deploy plugin', function () {
             stream.end();
         });
 
-        it('calls callback with null if installation is done', function(done) {
-            var spy = sinon.spy(),
-                stream = plugin.install({}, spy);
-
-            stream.on('finish', function() {
-                expect(spy).to.be.calledOnce.and.calledWith(null);
-                done();
-            });
-
-            stream.write(fileA);
-            stream.write(fileB);
-
-            expect(spy).not.to.be.called;
-
-            stream.end();
-        });
-
-        it('calls callback with error if an error occurs', function(done) {
-            var spy = sinon.spy(),
-                expectedError = 'An error occured',
-                stream = plugin.install({}, spy);
+        it('triggers error event if deploy fails', function(done) {
+            var expectedError = 'An error occured',
+                stream = plugin.install({});
 
             // Call install callback with no error
             mavenDeploy.install.yields(expectedError);
 
-            stream.on('finish', function() {
-                expect(spy).to.be.calledOnce.and.calledWith(expectedError);
+            stream.on('error', function(error) {
+                expect(error).to.be.equal(expectedError);
                 done();
             });
 

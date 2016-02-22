@@ -62,6 +62,7 @@ direction of a well performing gulp plugin. ~~Following the single responsibilit
 principle this plugin will only perform the deploy part in the future.~~
 
 - Remove the additional config level from `options = {config: { ... }}` to `options = { ... }`
+- Callback function was removed. Use stream events `finish` or `error` to get notified about successful or unsuccessful deploys
 
 ## Sample project
 
