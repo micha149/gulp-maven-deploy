@@ -2,7 +2,7 @@ gulp-maven-deploy
 =================
 
 ***
-**Warning** This readme contains changes for the upcoming 1.0.0 release. For using the 0.x versions, have a look into the [0.x support branch](./tree/support/0.x)
+**Warning** This readme contains changes for the upcoming 1.0.0 release. For using the 0.x versions, have a look into the [0.x support branch](://github.com/micha149/gulp-maven-deploy/tree/support/0.x)
 ***
 
 A [Gulp](//gulpjs.com/) wrapper for the [maven-deploy](https://www.npmjs.org/package/maven-deploy) module. Enables you to have projects which are built with Gulp, but deploys to Maven repositories.
