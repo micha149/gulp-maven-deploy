@@ -4,6 +4,8 @@ var plugin = require('../index.js'),
     Vinyl = require('vinyl'),
     mavenDeploy = require('maven-deploy');
 
+/* globals describe: false, it: false, beforeEach: false, afterEach: false */
+
 describe('gulp-maven-deploy plugin', function () {
 
     var fileA, fileB, testConfig;
@@ -11,6 +13,7 @@ describe('gulp-maven-deploy plugin', function () {
     beforeEach(function () {
         sinon.stub(mavenDeploy, 'config');
         sinon.stub(mavenDeploy, 'deploy');
+        mavenDeploy.deploy.yields(null);
 
         fileA = new Vinyl({
             cwd: "/home/jdoe/gulp-maven-deploy/",
@@ -54,36 +57,41 @@ describe('gulp-maven-deploy plugin', function () {
             }).to.throw('Missing required property "config" object');
         });
 
-        it('passes processed config to maven-deploy module', function () {
+        it('passes processed config to maven-deploy module', function (done) {
             var stream = plugin.deploy({config: testConfig});
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(testConfig);
+                done();
+            });
 
             stream.write(fileA);
             stream.end();
-
-            expect(mavenDeploy.config).to.be.calledWith(testConfig);
         });
 
-        it('calls deploy function of maven-deploy for each piped file', function () {
-            // Call install callback with no error
-            mavenDeploy.deploy.yields(null);
-
+        it('calls deploy function of maven-deploy for each piped file', function (done) {
             var stream = plugin.deploy({config: testConfig});
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.deploy).to.be.calledTwice;
+                expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[0].id);
+                expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[0].id);
+                done();
+            });
 
             stream.write(fileA);
             stream.write(fileB);
             stream.end();
-
-            expect(mavenDeploy.deploy).to.be.calledTwice;
-            expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[0].id);
-            expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[0].id);
         });
 
         it('calls callback with null if deploy is done', function(done) {
             var spy = sinon.spy(),
                 stream = plugin.deploy({config: testConfig}, spy);
 
-            // Call install callback with no error
-            mavenDeploy.deploy.yields(null);
+            stream.on('finish', function() {
+                expect(spy).to.be.calledOnce.and.calledWith(null);
+                done();
+            });
 
             stream.write(fileA);
             stream.write(fileB);
@@ -91,11 +99,6 @@ describe('gulp-maven-deploy plugin', function () {
             expect(spy).not.to.be.called;
 
             stream.end();
-
-            process.nextTick(function() {
-                expect(spy).to.be.calledOnce.and.calledWith(null);
-                done();
-            });
         });
 
         it('calls callback with error if an error occurs', function(done) {
@@ -106,16 +109,16 @@ describe('gulp-maven-deploy plugin', function () {
             // Call install callback with no error
             mavenDeploy.deploy.yields(expectedError);
 
+            stream.on('finish', function() {
+                expect(spy).to.be.calledOnce.and.calledWith(expectedError);
+                done();
+            });
+
             stream.write(fileA);
             stream.end();
-
-            process.nextTick(function() {
-                expect(spy).to.be.calledOnce.and.calledWith(expectedError);
-                done()
-            });
         });
 
-        it('calls deploy function of maven-deploy for each configured repository', function() {
+        it('calls deploy function of maven-deploy for each configured repository', function(done) {
             mavenDeploy.deploy.yields(null);
 
             testConfig.repositories.push({
@@ -125,17 +128,20 @@ describe('gulp-maven-deploy plugin', function () {
 
             var stream = plugin.deploy({config: testConfig});
 
+            stream.on('finish', function() {
+                expect(mavenDeploy.deploy).to.be.calledTwice;
+                expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[0].id);
+                expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[1].id);
+                done();
+            });
+
             stream.write(fileA);
             stream.end();
-
-            expect(mavenDeploy.deploy).to.be.calledTwice;
-            expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[0].id);
-            expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[1].id);
         });
 
         it('throws error if repository config is missing', function() {
             expect(function() {
-                plugin.deploy({config: {}})
+                plugin.deploy({config: {}});
             }).to.throw('Missing repositories configuration');
         });
 
@@ -146,7 +152,7 @@ describe('gulp-maven-deploy plugin', function () {
                     url: 'http://some-repo/url'
                 }, {
                     id: 'only-an-id'
-                }]}})
+                }]}});
             }).to.throw('Deploy required "id" and "url".');
         });
 
@@ -157,8 +163,8 @@ describe('gulp-maven-deploy plugin', function () {
                     url: 'http://some-repo/url'
                 },{
                     url: 'http://only/an-url'
-                }]}})
+                }]}});
             }).to.throw('Deploy required "id" and "url".');
         });
-    })
+    });
 });
