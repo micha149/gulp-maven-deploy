@@ -41,12 +41,6 @@ describe('gulp-maven-deploy plugin', function () {
             expect(plugin).to.have.property('install').that.is.a('function');
         });
 
-        it('throws error if no config was given', function () {
-            expect(function () {
-                plugin.install();
-            }).to.throw('Missing required property "config" object');
-        });
-
         it('passes processed config to maven-deploy module', function (done) {
             var expectedConfig = {
                 'finalName': 'myName.war',
@@ -54,7 +48,7 @@ describe('gulp-maven-deploy plugin', function () {
                 'type': 'war'
             };
 
-            var stream = plugin.install({config: expectedConfig});
+            var stream = plugin.install(expectedConfig);
 
             stream.on('finish', function() {
                 expect(mavenDeploy.config).to.be.calledWith(expectedConfig);
@@ -66,7 +60,7 @@ describe('gulp-maven-deploy plugin', function () {
         });
 
         it('calls install function of maven-deploy for each piped file', function (done) {
-            var stream = plugin.install({config: {}});
+            var stream = plugin.install({});
 
             stream.on('finish', function() {
                 expect(mavenDeploy.install).to.be.calledTwice;
@@ -80,7 +74,7 @@ describe('gulp-maven-deploy plugin', function () {
 
         it('calls callback with null if installation is done', function(done) {
             var spy = sinon.spy(),
-                stream = plugin.install({config: {}}, spy);
+                stream = plugin.install({}, spy);
 
             stream.on('finish', function() {
                 expect(spy).to.be.calledOnce.and.calledWith(null);
@@ -98,7 +92,7 @@ describe('gulp-maven-deploy plugin', function () {
         it('calls callback with error if an error occurs', function(done) {
             var spy = sinon.spy(),
                 expectedError = 'An error occured',
-                stream = plugin.install({config: {}}, spy);
+                stream = plugin.install({}, spy);
 
             // Call install callback with no error
             mavenDeploy.install.yields(expectedError);

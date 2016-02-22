@@ -51,14 +51,8 @@ describe('gulp-maven-deploy plugin', function () {
             expect(plugin).to.have.property('deploy').that.is.a('function');
         });
 
-        it('throws error if no config was given', function () {
-            expect(function () {
-                plugin.deploy();
-            }).to.throw('Missing required property "config" object');
-        });
-
         it('passes processed config to maven-deploy module', function (done) {
-            var stream = plugin.deploy({config: testConfig});
+            var stream = plugin.deploy(testConfig);
 
             stream.on('finish', function() {
                 expect(mavenDeploy.config).to.be.calledWith(testConfig);
@@ -70,7 +64,7 @@ describe('gulp-maven-deploy plugin', function () {
         });
 
         it('calls deploy function of maven-deploy for each piped file', function (done) {
-            var stream = plugin.deploy({config: testConfig});
+            var stream = plugin.deploy(testConfig);
 
             stream.on('finish', function() {
                 expect(mavenDeploy.deploy).to.be.calledTwice;
@@ -86,7 +80,7 @@ describe('gulp-maven-deploy plugin', function () {
 
         it('calls callback with null if deploy is done', function(done) {
             var spy = sinon.spy(),
-                stream = plugin.deploy({config: testConfig}, spy);
+                stream = plugin.deploy(testConfig, spy);
 
             stream.on('finish', function() {
                 expect(spy).to.be.calledOnce.and.calledWith(null);
@@ -104,7 +98,7 @@ describe('gulp-maven-deploy plugin', function () {
         it('calls callback with error if an error occurs', function(done) {
             var spy = sinon.spy(),
                 expectedError = 'An error occured',
-                stream = plugin.deploy({config: testConfig}, spy);
+                stream = plugin.deploy(testConfig, spy);
 
             // Call install callback with no error
             mavenDeploy.deploy.yields(expectedError);
@@ -126,7 +120,7 @@ describe('gulp-maven-deploy plugin', function () {
                 url: 'http://another-repo/url'
             });
 
-            var stream = plugin.deploy({config: testConfig});
+            var stream = plugin.deploy(testConfig);
 
             stream.on('finish', function() {
                 expect(mavenDeploy.deploy).to.be.calledTwice;
@@ -141,29 +135,29 @@ describe('gulp-maven-deploy plugin', function () {
 
         it('throws error if repository config is missing', function() {
             expect(function() {
-                plugin.deploy({config: {}});
+                plugin.deploy({});
             }).to.throw('Missing repositories configuration');
         });
 
         it('throws error if any configured repository is missing id property', function() {
             expect(function() {
-                plugin.deploy({config: {repositories: [{
+                plugin.deploy({repositories: [{
                     id: 'some-repo',
                     url: 'http://some-repo/url'
                 }, {
                     id: 'only-an-id'
-                }]}});
+                }]});
             }).to.throw('Deploy required "id" and "url".');
         });
 
         it('throws error if any configured repository is missing url property', function() {
             expect(function() {
-                plugin.deploy({config: {repositories: [{
+                plugin.deploy({repositories: [{
                     id: 'some-repo',
                     url: 'http://some-repo/url'
                 },{
                     url: 'http://only/an-url'
-                }]}});
+                }]});
             }).to.throw('Deploy required "id" and "url".');
         });
     });
