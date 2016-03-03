@@ -13,7 +13,7 @@ A [Gulp](//gulpjs.com/) wrapper for the [maven-deploy](https://www.npmjs.org/pac
 
 [![NPM](https://nodei.co/npm/gulp-maven-deploy.png?stars=true&downloads=true)](https://npmjs.org/package/gulp-maven-deploy)
 
-All the samples below requires a basic understanding of [Gulp](//gulpjs.com/) and [Maven](http://maven.apache.org/). Please look at the documentation for those projects for details.
+All the samples below require a basic understanding of [Gulp](//gulpjs.com/) and [Maven](http://maven.apache.org/). Please look at the documentation for those projects for details.
 
 ## Installing
 
