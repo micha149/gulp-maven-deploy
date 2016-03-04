@@ -20,7 +20,7 @@
   "licence": "MIT",
   "dependencies": {
     "async": "^1.2.1",
-    "maven-deploy": "^1.1.0",
+    "maven-deploy": "~1.3.2",
     "through2": "^2.0.1"
   },
   "devDependencies": {
