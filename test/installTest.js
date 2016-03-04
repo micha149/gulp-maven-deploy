@@ -103,6 +103,7 @@ describe('gulp-maven-deploy plugin', function () {
 
             stream.on('finish', function() {
                 fs.stat(mavenDeploy.install.firstCall.args[0], function(error) {
+                    expect(error).not.to.be.null;
                     expect(error.code).to.be.equal('ENOENT');
                     done();
                 });
