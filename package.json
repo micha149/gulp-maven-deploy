@@ -1,6 +1,6 @@
 {
   "name": "gulp-maven-deploy",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Simple gulp plugin for the maven-deploy module",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,9 @@
     "maven-deploy": "^1.4.0",
     "temp": "^0.8.3",
     "through2": "^2.0.1"
+  },
+  "peerDependency": {
+      "vinyl": "^1.1.1"
   },
   "devDependencies": {
     "chai": "^3.0.0",
