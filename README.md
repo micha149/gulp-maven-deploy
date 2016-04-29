@@ -17,7 +17,7 @@ All the samples below require a basic understanding of [Gulp](//gulpjs.com/) and
 
 ## Installing
 
-	$ npm install gulp-maven-deploy --save-dev
+    $ npm install gulp-maven-deploy --save-dev
 
 ## Sample usage in a gulpfile.js
 
@@ -25,32 +25,32 @@ Below are two configuration samples:
 
 Configuring a task for deploying to a Maven proxy
 
-	var maven = require('gulp-maven-deploy');
-	var zip = require('gulp-zip');
+    var maven = require('gulp-maven-deploy');
+    var zip = require('gulp-zip');
 
-	gulp.task('deploy', function(){
-		gulp.src('.')
-			.pipe(zip('my-artifact.war'))
-			.pipe(maven.deploy({
-				'groupId': 'com.mygroup',
-				'repositories': [{
-					'id': 'some-repo-id',
-					'url': 'http://some-repo/url'
-				}]
-			}))
-	});
+    gulp.task('deploy', function(){
+        gulp.src('.')
+            .pipe(zip('my-artifact.war'))
+            .pipe(maven.deploy({
+                'groupId': 'com.mygroup',
+                'repositories': [{
+                    'id': 'some-repo-id',
+                    'url': 'http://some-repo/url'
+                }]
+            }))
+    });
 
 A task running a local Maven install:
 
-	var maven = require('gulp-maven-deploy');
+    var maven = require('gulp-maven-deploy');
 
-	gulp.task('deploy-local', function(){
-		gulp.src('.')
-		.pipe(maven.install({
-			'groupId': 'com.mygroup',
-			'type': 'war'
-		}))
-	});
+    gulp.task('deploy-local', function(){
+        gulp.src('.')
+        .pipe(maven.install({
+            'groupId': 'com.mygroup',
+            'type': 'war'
+        }))
+    });
 
 Note: A local install in Maven means it is only available on your machine. A deployment is different as it means you ship the artifact off to some remote repository.
 
@@ -69,14 +69,14 @@ them, rename the file in the gulp stream before piping it to `gulp-maven-deploy`
 
 There is a complete sample project if you checkout the [samples](./samples) directory.
 
-	$ npm install
-	$ ./node_modules/.bin/gulp
+    $ npm install
+    $ ./node_modules/.bin/gulp
 
 This will install gulp and allow you to run the sample. Gulp will run with with a local deploy configuration. You should see an artifact in the dist folder and a file deployed to your local _M2_HOME_ repository.
 
 ## Running tests
 
-	$ npm test
+    $ npm test
 
 ## Contributions
 
