@@ -1,6 +1,15 @@
 language: node_js
 node_js:
-  - "0.10"
-  - "0.12"
-  - "4"
-  - "5"
+- '0.10'
+- '0.12'
+- '4'
+- '5'
+- '6'
+deploy:
+  provider: npm
+  email: michael@van-engelshoven.de
+  api_key:
+    secure: B5MAYAhmFxhQrySFuCel37D5F4/GkQQNVicTtCM+RjZ4Em9tahj5cJkepFxr8zjc94qXuehPW90Phd6MQeD0Zs/sUzjjOjN2dHaubmFkjtv4cMjo34u4nPY0Y0+R82CCvsx0kkWd1NblKPE3lkv0AOBl6SLc1Syi/ZcHvQOiVv8=
+  on:
+    tags: true
+    repo: micha149/gulp-maven-deploy

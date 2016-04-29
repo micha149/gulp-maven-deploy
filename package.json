@@ -1,6 +1,6 @@
 {
   "name": "gulp-maven-deploy",
-  "version": "0.2.1",
+  "version": "1.0.0-beta.1",
   "description": "Simple gulp plugin for the maven-deploy module",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,9 @@
   "licence": "MIT",
   "dependencies": {
     "async": "^1.2.1",
-    "maven-deploy": "^1.1.0",
+    "lodash.assign": "^4.0.8",
+    "maven-deploy": "^1.4.0",
+    "temp": "^0.8.3",
     "through2": "^2.0.1"
   },
   "devDependencies": {

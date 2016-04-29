@@ -2,13 +2,14 @@ var plugin = require('../index.js'),
     expect = require('chai').expect,
     sinon = require('sinon'),
     Vinyl = require('vinyl'),
-    mavenDeploy = require('maven-deploy');
+    mavenDeploy = require('maven-deploy'),
+    fs = require('fs');
 
 /* globals describe: false, it: false, beforeEach: false, afterEach: false */
 
 describe('gulp-maven-deploy plugin', function () {
 
-    var fileA, fileB;
+    var fileA, fileB, testConfig;
 
     beforeEach(function () {
         sinon.stub(mavenDeploy, 'config');
@@ -28,6 +29,12 @@ describe('gulp-maven-deploy plugin', function () {
             path: "/home/jdoe/gulp-maven-deploy/test/fileB.txt",
             contents: new Buffer('some content of file B')
         });
+
+        testConfig = {
+            'finalName': 'myPackage.war',
+            'groupId': 'com.mygroup',
+            'type': 'war'
+        };
     });
 
     afterEach(function () {
@@ -41,12 +48,6 @@ describe('gulp-maven-deploy plugin', function () {
             expect(plugin).to.have.property('install').that.is.a('function');
         });
 
-        it('throws error if no config was given', function () {
-            expect(function () {
-                plugin.install();
-            }).to.throw('Missing required property "config" object');
-        });
-
         it('passes processed config to maven-deploy module', function (done) {
             var expectedConfig = {
                 'finalName': 'myName.war',
@@ -54,7 +55,7 @@ describe('gulp-maven-deploy plugin', function () {
                 'type': 'war'
             };
 
-            var stream = plugin.install({config: expectedConfig});
+            var stream = plugin.install(expectedConfig);
 
             stream.on('finish', function() {
                 expect(mavenDeploy.config).to.be.calledWith(expectedConfig);
@@ -66,7 +67,7 @@ describe('gulp-maven-deploy plugin', function () {
         });
 
         it('calls install function of maven-deploy for each piped file', function (done) {
-            var stream = plugin.install({config: {}});
+            var stream = plugin.install({});
 
             stream.on('finish', function() {
                 expect(mavenDeploy.install).to.be.calledTwice;
@@ -78,33 +79,67 @@ describe('gulp-maven-deploy plugin', function () {
             stream.end();
         });
 
-        it('calls callback with null if installation is done', function(done) {
-            var spy = sinon.spy(),
-                stream = plugin.install({config: {}}, spy);
+        it('calls install with a temporary file which has correct content', function (done) {
+            var stream = plugin.install(testConfig);
+
+            mavenDeploy.install.restore();
+            sinon.stub(mavenDeploy, 'install', function(filename, fileDone) {
+                fs.readFile(filename, 'utf-8', function(err, content) {
+                    expect(content).to.be.equal(fileA.contents.toString());
+                    fileDone(null);
+                });
+            });
 
             stream.on('finish', function() {
-                expect(spy).to.be.calledOnce.and.calledWith(null);
+                done();
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it('removes temporary file when finished', function(done) {
+            var stream = plugin.install(testConfig);
+
+            stream.on('finish', function() {
+                fs.stat(mavenDeploy.install.firstCall.args[0], function(error) {
+                    expect(error).not.to.be.null;
+                    expect(error.code).to.be.equal('ENOENT');
+                    done();
+                });
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it('passes files to next stream handler', function(done) {
+            var stream = plugin.install(testConfig),
+                spy = sinon.spy();
+
+            stream.on('data', spy);
+
+            stream.on('finish', function() {
+                expect(spy).to.be.calledTwice;
+                expect(spy).to.be.calledWith(fileA);
+                expect(spy).to.be.calledWith(fileB);
                 done();
             });
 
             stream.write(fileA);
             stream.write(fileB);
-
-            expect(spy).not.to.be.called;
-
             stream.end();
         });
 
-        it('calls callback with error if an error occurs', function(done) {
-            var spy = sinon.spy(),
-                expectedError = 'An error occured',
-                stream = plugin.install({config: {}}, spy);
+        it('triggers error event if deploy fails', function(done) {
+            var expectedError = 'An error occured',
+                stream = plugin.install({});
 
             // Call install callback with no error
             mavenDeploy.install.yields(expectedError);
 
-            stream.on('finish', function() {
-                expect(spy).to.be.calledOnce.and.calledWith(expectedError);
+            stream.on('error', function(error) {
+                expect(error).to.be.equal(expectedError);
                 done();
             });
 

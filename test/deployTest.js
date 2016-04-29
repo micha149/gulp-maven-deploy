@@ -2,7 +2,8 @@ var plugin = require('../index.js'),
     expect = require('chai').expect,
     sinon = require('sinon'),
     Vinyl = require('vinyl'),
-    mavenDeploy = require('maven-deploy');
+    mavenDeploy = require('maven-deploy'),
+    fs = require('fs');
 
 /* globals describe: false, it: false, beforeEach: false, afterEach: false */
 
@@ -30,9 +31,7 @@ describe('gulp-maven-deploy plugin', function () {
         });
 
         testConfig = {
-            'finalName': 'myPackage.war',
             'groupId': 'com.mygroup',
-            'type': 'war',
             'repositories': [{
                 'id': 'some-repo-id',
                 'url': 'http://some-repo/url'
@@ -51,17 +50,11 @@ describe('gulp-maven-deploy plugin', function () {
             expect(plugin).to.have.property('deploy').that.is.a('function');
         });
 
-        it('throws error if no config was given', function () {
-            expect(function () {
-                plugin.deploy();
-            }).to.throw('Missing required property "config" object');
-        });
-
         it('passes processed config to maven-deploy module', function (done) {
-            var stream = plugin.deploy({config: testConfig});
+            var stream = plugin.deploy(testConfig);
 
             stream.on('finish', function() {
-                expect(mavenDeploy.config).to.be.calledWith(testConfig);
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(testConfig));
                 done();
             });
 
@@ -70,12 +63,11 @@ describe('gulp-maven-deploy plugin', function () {
         });
 
         it('calls deploy function of maven-deploy for each piped file', function (done) {
-            var stream = plugin.deploy({config: testConfig});
+            var stream = plugin.deploy(testConfig);
 
             stream.on('finish', function() {
                 expect(mavenDeploy.deploy).to.be.calledTwice;
                 expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[0].id);
-                expect(mavenDeploy.deploy).to.be.calledWith(testConfig.repositories[0].id);
                 done();
             });
 
@@ -84,33 +76,113 @@ describe('gulp-maven-deploy plugin', function () {
             stream.end();
         });
 
-        it('calls callback with null if deploy is done', function(done) {
-            var spy = sinon.spy(),
-                stream = plugin.deploy({config: testConfig}, spy);
+        it('calls deploy with a temporary file which has correct content', function (done) {
+            var stream = plugin.deploy(testConfig);
+
+            mavenDeploy.deploy.restore();
+            sinon.stub(mavenDeploy, 'deploy', function(repoId, filename, snapshot, callback) {
+                fs.readFile(filename, 'utf-8', function(err, content) {
+                    expect(content).to.be.equal(fileA.contents.toString());
+                    callback(null);
+                });
+            });
 
             stream.on('finish', function() {
-                expect(spy).to.be.calledOnce.and.calledWith(null);
+                done();
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it.skip('uses artifact id from file stream', function (done) {
+            var stream = plugin.deploy(testConfig);
+            var expectedOptions = {
+                artifactId: 'expected-test-id'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
+                done();
+            });
+
+            fileA.artifactId = expectedOptions.artifactId;
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it('uses file extension as package type', function (done) {
+            var stream = plugin.deploy(testConfig);
+            var expectedOptions = {
+                type: 'txt'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
+                done();
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it('falls back to file name as artifact id', function (done) {
+            var stream = plugin.deploy(testConfig);
+            var expectedOptions = {
+                artifactId: 'fileA'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
+                done();
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it('removes temporary file when finished', function(done) {
+            var stream = plugin.deploy(testConfig);
+
+            stream.on('finish', function() {
+                fs.stat(mavenDeploy.deploy.firstCall.args[1], function(error) {
+                    expect(error).not.to.be.null;
+                    expect(error.code).to.be.equal('ENOENT');
+                    done();
+                });
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it('passes files to next stream handler', function(done) {
+            var stream = plugin.deploy(testConfig),
+                spy = sinon.spy();
+
+            stream.on('data', spy);
+
+            stream.on('finish', function() {
+                expect(spy).to.be.calledTwice;
+                expect(spy).to.be.calledWith(fileA);
+                expect(spy).to.be.calledWith(fileB);
                 done();
             });
 
             stream.write(fileA);
             stream.write(fileB);
-
-            expect(spy).not.to.be.called;
-
             stream.end();
         });
 
-        it('calls callback with error if an error occurs', function(done) {
-            var spy = sinon.spy(),
-                expectedError = 'An error occured',
-                stream = plugin.deploy({config: testConfig}, spy);
+        it('triggers error event if deploy fails', function(done) {
+            var expectedError = 'An error occured',
+                stream = plugin.deploy(testConfig);
 
-            // Call install callback with no error
+            // Call deploy callback with no error
             mavenDeploy.deploy.yields(expectedError);
 
-            stream.on('finish', function() {
-                expect(spy).to.be.calledOnce.and.calledWith(expectedError);
+            stream.on('error', function(error) {
+                expect(error).to.be.equal(expectedError);
                 done();
             });
 
@@ -126,7 +198,7 @@ describe('gulp-maven-deploy plugin', function () {
                 url: 'http://another-repo/url'
             });
 
-            var stream = plugin.deploy({config: testConfig});
+            var stream = plugin.deploy(testConfig);
 
             stream.on('finish', function() {
                 expect(mavenDeploy.deploy).to.be.calledTwice;
@@ -141,29 +213,29 @@ describe('gulp-maven-deploy plugin', function () {
 
         it('throws error if repository config is missing', function() {
             expect(function() {
-                plugin.deploy({config: {}});
+                plugin.deploy({});
             }).to.throw('Missing repositories configuration');
         });
 
         it('throws error if any configured repository is missing id property', function() {
             expect(function() {
-                plugin.deploy({config: {repositories: [{
+                plugin.deploy({repositories: [{
                     id: 'some-repo',
                     url: 'http://some-repo/url'
                 }, {
                     id: 'only-an-id'
-                }]}});
+                }]});
             }).to.throw('Deploy required "id" and "url".');
         });
 
         it('throws error if any configured repository is missing url property', function() {
             expect(function() {
-                plugin.deploy({config: {repositories: [{
+                plugin.deploy({repositories: [{
                     id: 'some-repo',
                     url: 'http://some-repo/url'
                 },{
                     url: 'http://only/an-url'
-                }]}});
+                }]});
             }).to.throw('Deploy required "id" and "url".');
         });
     });
