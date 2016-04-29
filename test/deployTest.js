@@ -126,6 +126,23 @@ describe('gulp-maven-deploy plugin', function () {
             stream.end();
         });
 
+        it('ensures to work with old vinyl versions', function (done) {
+            var stream = plugin.deploy(testConfig);
+            var expectedOptions = {
+                artifactId: 'fileA'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
+                done();
+            });
+
+            var oldVinyFile = Object.create(fileA, {stem: {}});
+
+            stream.write(oldVinyFile);
+            stream.end();
+        });
+
         it('falls back to file name as artifact id', function (done) {
             var stream = plugin.deploy(testConfig);
             var expectedOptions = {
