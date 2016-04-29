@@ -26,19 +26,18 @@ Below are two configuration samples:
 Configuring a task for deploying to a Maven proxy
 
 	var maven = require('gulp-maven-deploy');
+	var zip = require('gulp-zip');
 
 	gulp.task('deploy', function(){
 		gulp.src('.')
-		.pipe(maven.deploy({
-			'groupId': 'com.mygroup',
-			'type': 'war',
-			'repositories': [
-				{
+			.pipe(zip('my-artifact.war'))
+			.pipe(maven.deploy({
+				'groupId': 'com.mygroup',
+				'repositories': [{
 					'id': 'some-repo-id',
 					'url': 'http://some-repo/url'
-				}
-			]
-		}))
+				}]
+			}))
 	});
 
 A task running a local Maven install:
@@ -63,6 +62,8 @@ principle this plugin will only perform the deploy part in the future.~~
 
 - Remove the additional config level from `options = {config: { ... }}` to `options = { ... }`
 - Callback function was removed. Use stream events `finish` or `error` to get notified about successful or unsuccessful deploys
+- Remove `artifactId` and `type` from config. They are now extracted from the file name. To influence
+them, rename the file in the gulp stream before piping it to `gulp-maven-deploy`
 
 ## Sample project
 

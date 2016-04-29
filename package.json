@@ -20,6 +20,7 @@
   "licence": "MIT",
   "dependencies": {
     "async": "^1.2.1",
+    "lodash.assign": "^4.0.8",
     "maven-deploy": "^1.4.0",
     "temp": "^0.8.3",
     "through2": "^2.0.1"

@@ -31,9 +31,7 @@ describe('gulp-maven-deploy plugin', function () {
         });
 
         testConfig = {
-            'finalName': 'myPackage.war',
             'groupId': 'com.mygroup',
-            'type': 'war',
             'repositories': [{
                 'id': 'some-repo-id',
                 'url': 'http://some-repo/url'
@@ -56,7 +54,7 @@ describe('gulp-maven-deploy plugin', function () {
             var stream = plugin.deploy(testConfig);
 
             stream.on('finish', function() {
-                expect(mavenDeploy.config).to.be.calledWith(testConfig);
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(testConfig));
                 done();
             });
 
@@ -90,6 +88,52 @@ describe('gulp-maven-deploy plugin', function () {
             });
 
             stream.on('finish', function() {
+                done();
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it.skip('uses artifact id from file stream', function (done) {
+            var stream = plugin.deploy(testConfig);
+            var expectedOptions = {
+                artifactId: 'expected-test-id'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
+                done();
+            });
+
+            fileA.artifactId = expectedOptions.artifactId;
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it('uses file extension as package type', function (done) {
+            var stream = plugin.deploy(testConfig);
+            var expectedOptions = {
+                type: 'txt'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
+                done();
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it('falls back to file name as artifact id', function (done) {
+            var stream = plugin.deploy(testConfig);
+            var expectedOptions = {
+                artifactId: 'fileA'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
                 done();
             });
 
