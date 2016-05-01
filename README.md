@@ -25,46 +25,53 @@ Below are two configuration samples:
 
 Configuring a task for deploying to a Maven proxy
 
-    var maven = require('gulp-maven-deploy');
-    var zip = require('gulp-zip');
+```javascript
+var gulp = require('gulp'),
+    maven = require('gulp-maven-deploy');
+    zip = require('gulp-zip');
 
-    gulp.task('deploy', function(){
-        gulp.src('.')
-            .pipe(zip('my-artifact.war'))
-            .pipe(maven.deploy({
-                'groupId': 'com.mygroup',
-                'repositories': [{
-                    'id': 'some-repo-id',
-                    'url': 'http://some-repo/url'
-                }]
-            }))
-    });
+gulp.task('deploy', function(){
+    gulp.src('.')
+        .pipe(zip('my-artifact.war'))
+        .pipe(maven.deploy({
+            'groupId': 'com.mygroup',
+            'repositories': [{
+                'id': 'some-repo-id',
+                'url': 'http://some-repo/url'
+            }]
+        }))
+});
+```
 
 A task running a local Maven install:
 
-    var maven = require('gulp-maven-deploy');
-    var zip = require('gulp-zip');
+```javascript
+var gulp = require('gulp'),
+    maven = require('gulp-maven-deploy'),
+    zip = require('gulp-zip');
 
-    gulp.task('deploy-local', function(){
-        gulp.src('.')
-            .pipe(zip('my-artifact.war'))
-            .pipe(maven.install({
-                'groupId': 'com.mygroup',
-            }))
-    });
+gulp.task('deploy-local', function(){
+    gulp.src('.')
+        .pipe(zip('my-artifact.war'))
+        .pipe(maven.install({
+            'groupId': 'com.mygroup',
+        }))
+});
+```
 
 Note: A local install in Maven means it is only available on your machine. A deployment is different as it means you ship the artifact off to some remote repository.
 
 ## Upgrading from 0.x to 1.x
 
 With `gulp-maven-deploy` version 1.0.0 we want to go one more step into the
-direction of a well performing gulp plugin. ~~Following the single responsibility
-principle this plugin will only perform the deploy part in the future.~~
+direction of a well performing gulp plugin. Following the single responsibility
+principle this plugin will only perform the deploy part in the future.
 
+- Implement a packaging logic for your files like [gulp-zip](https://github.com/sindresorhus/gulp-zip)
 - Remove the additional config level from `options = {config: { ... }}` to `options = { ... }`
-- Callback function was removed. Use stream events `finish` or `error` to get notified about successful or unsuccessful deploys
 - Remove `artifactId` and `type` from config. They are now extracted from the file name. To influence
 them, rename the file in the gulp stream before piping it to `gulp-maven-deploy`
+- Callback function was removed. Use stream events `finish` or `error` to get notified about successful or unsuccessful deploys
 
 ## Example project
 
