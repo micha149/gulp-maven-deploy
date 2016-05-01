@@ -32,8 +32,7 @@ describe('gulp-maven-deploy plugin', function () {
 
         testConfig = {
             'finalName': 'myPackage.war',
-            'groupId': 'com.mygroup',
-            'type': 'war'
+            'groupId': 'com.mygroup'
         };
     });
 
@@ -52,17 +51,63 @@ describe('gulp-maven-deploy plugin', function () {
             var expectedConfig = {
                 'finalName': 'myName.war',
                 'groupId': 'com.mygroup',
-                'type': 'war'
             };
 
             var stream = plugin.install(expectedConfig);
 
             stream.on('finish', function() {
-                expect(mavenDeploy.config).to.be.calledWith(expectedConfig);
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedConfig));
                 done();
             });
 
             stream.write(fileA);
+            stream.end();
+        });
+
+        it('uses file extension as package type', function (done) {
+            var stream = plugin.install(testConfig);
+            var expectedOptions = {
+                type: 'txt'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
+                done();
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it('uses file name as artifact id', function (done) {
+            var stream = plugin.install(testConfig);
+            var expectedOptions = {
+                artifactId: 'fileA'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
+                done();
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it('ensures to work with old vinyl versions', function (done) {
+            var stream = plugin.install(testConfig);
+            var expectedOptions = {
+                artifactId: 'fileA'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
+                done();
+            });
+
+            var oldVinyFile = Object.create(fileA, {stem: {}});
+
+            stream.write(oldVinyFile);
             stream.end();
         });
 
