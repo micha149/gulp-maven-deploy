@@ -17,7 +17,7 @@
   "contributors": [
     "Espen Dalløkken <leftie.friele@gmail.com>"
   ],
-  "licence": "MIT",
+  "license": "MIT",
   "dependencies": {
     "async": "^1.2.1",
     "lodash.assign": "^4.0.8",
