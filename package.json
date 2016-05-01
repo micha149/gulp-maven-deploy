@@ -4,7 +4,7 @@
   "description": "Simple gulp plugin for the maven-deploy module",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require test/setup.js test/**/*Test.js && jshint --config .jshintrc index.js lib test"
+    "test": "mocha --require test/setup.js test/**/*Test.js && jshint --config .jshintrc index.js src test"
   },
   "keywords": [
     "maven",
