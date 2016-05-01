@@ -65,14 +65,16 @@ principle this plugin will only perform the deploy part in the future.~~
 - Remove `artifactId` and `type` from config. They are now extracted from the file name. To influence
 them, rename the file in the gulp stream before piping it to `gulp-maven-deploy`
 
-## Sample project
+## Example project
 
-There is a complete sample project if you checkout the [samples](./samples) directory.
+There is a complete example project if you checkout the [example](./example) directory.
 
+    $ cd example
     $ npm install
     $ ./node_modules/.bin/gulp
 
-This will install gulp and allow you to run the sample. Gulp will run with with a local deploy configuration. You should see an artifact in the dist folder and a file deployed to your local _M2_HOME_ repository.
+This will install gulp and allow you to run the sample. Gulp will run with with a local deploy configuration
+by default. You should see an artifact deployed to your local `M2_HOME` repository.
 
 ## Running tests
 
