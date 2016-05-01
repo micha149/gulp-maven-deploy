@@ -43,13 +43,14 @@ Configuring a task for deploying to a Maven proxy
 A task running a local Maven install:
 
     var maven = require('gulp-maven-deploy');
+    var zip = require('gulp-zip');
 
     gulp.task('deploy-local', function(){
         gulp.src('.')
-        .pipe(maven.install({
-            'groupId': 'com.mygroup',
-            'type': 'war'
-        }))
+            .pipe(zip('my-artifact.war'))
+            .pipe(maven.install({
+                'groupId': 'com.mygroup',
+            }))
     });
 
 Note: A local install in Maven means it is only available on your machine. A deployment is different as it means you ship the artifact off to some remote repository.
