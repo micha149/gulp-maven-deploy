@@ -95,22 +95,6 @@ describe('gulp-maven-deploy plugin', function () {
             stream.end();
         });
 
-        it.skip('uses artifact id from file stream', function (done) {
-            var stream = plugin.deploy(testConfig);
-            var expectedOptions = {
-                artifactId: 'expected-test-id'
-            };
-
-            stream.on('finish', function() {
-                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
-                done();
-            });
-
-            fileA.artifactId = expectedOptions.artifactId;
-            stream.write(fileA);
-            stream.end();
-        });
-
         it('uses file extension as package type', function (done) {
             var stream = plugin.deploy(testConfig);
             var expectedOptions = {
@@ -143,7 +127,7 @@ describe('gulp-maven-deploy plugin', function () {
             stream.end();
         });
 
-        it('falls back to file name as artifact id', function (done) {
+        it('uses file name as artifact id', function (done) {
             var stream = plugin.deploy(testConfig);
             var expectedOptions = {
                 artifactId: 'fileA'
