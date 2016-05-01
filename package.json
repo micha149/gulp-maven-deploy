@@ -1,10 +1,10 @@
 {
   "name": "gulp-maven-deploy",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.5",
   "description": "Simple gulp plugin for the maven-deploy module",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require test/setup.js test/**/*Test.js && jshint --config .jshintrc index.js lib test"
+    "test": "mocha --require test/setup.js test/**/*Test.js && jshint --config .jshintrc index.js src test"
   },
   "keywords": [
     "maven",
@@ -17,7 +17,7 @@
   "contributors": [
     "Espen Dalløkken <leftie.friele@gmail.com>"
   ],
-  "licence": "MIT",
+  "license": "MIT",
   "dependencies": {
     "async": "^1.2.1",
     "lodash.assign": "^4.0.8",

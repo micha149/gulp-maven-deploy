@@ -1,32 +1,17 @@
 var through = require('through2'),
     gmd = require('maven-deploy'),
     async = require('async'),
-    assign = require('lodash.assign'),
     temp = require('temp').track(),
-    File = require('vinyl');
+    assertRepositoriesConfig = require('./util/assertRepositoriesConfig'),
+    buildFileOptions = require('./util/buildFileOptions');
 
 module.exports = function deploy(options) {
 
-    if (!options.hasOwnProperty('repositories')) {
-        throw new Error('Missing repositories configuration');
-    }
-
-    options.repositories.forEach(function(repo) {
-        if (!repo.hasOwnProperty('id') || !repo.hasOwnProperty('url')) {
-            throw new Error('Deploy required "id" and "url".');
-        }
-    });
+    assertRepositoriesConfig(options);
 
     var stream = through.obj(function (file, enc, fileDone) {
-        var tempFile = temp.createWriteStream();
-
-        file = new File(file);
-
-        var fileOptions = assign({}, options, {
-            //artifactId: file.artifactId || file.stem,
-            artifactId: file.stem,
-            type: file.extname.replace(/^\./, '')
-        });
+        var tempFile = temp.createWriteStream(),
+            fileOptions = buildFileOptions(file, options);
 
         tempFile.on('finish', function() {
             async.each(fileOptions.repositories, function (repo, repoDone) {

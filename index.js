@@ -1,2 +1,2 @@
-module.exports.deploy = require('./lib/deploy');
-module.exports.install = require('./lib/install');
+module.exports.deploy = require('./src/deploy');
+module.exports.install = require('./src/install');
