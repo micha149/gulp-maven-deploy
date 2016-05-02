@@ -13,7 +13,7 @@ All the samples below requires a basic understanding of [Gulp](//gulpjs.com/) an
 
 ## Installing
 
-	$ npm install gulp-maven-deploy --save-dev
+	$ npm install gulp-maven-deploy@0.* --save-dev
 
 ## Sample usage in a gulpfile.js
 
