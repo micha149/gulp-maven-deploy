@@ -142,6 +142,23 @@ describe('gulp-maven-deploy plugin', function () {
             stream.end();
         });
 
+        it('uses provided artifactId', function (done) {
+            var config = Object.assign({}, testConfig);
+            config.artifactId = 'file';
+            var stream = plugin.deploy(config);
+            var expectedOptions = {
+                artifactId: 'file'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
+                done();
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
         it('removes temporary file when finished', function(done) {
             var stream = plugin.deploy(testConfig);
 

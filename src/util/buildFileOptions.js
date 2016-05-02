@@ -5,10 +5,10 @@ module.exports = function(file, baseOptions) {
     // Ensure file to be of new vinyl version
     file = new File(file);
 
-    var fileOptions = assign({}, baseOptions, {
+    var fileOptions = assign({}, {
         artifactId: file.stem,
         type: file.extname.replace(/^\./, '')
-    });
+    }, baseOptions);
 
     return fileOptions;
 };
