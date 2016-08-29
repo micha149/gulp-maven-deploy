@@ -1,10 +1,6 @@
 gulp-maven-deploy
 =================
 
-***
-**Warning** This readme contains changes for the upcoming 1.0.0 release. For using the 0.x versions, have a look into the [0.x support branch](https://github.com/micha149/gulp-maven-deploy/tree/support/0.x)
-***
-
 A [Gulp](//gulpjs.com/) wrapper for the [maven-deploy](https://www.npmjs.org/package/maven-deploy) module. Enables you to have projects which are built with Gulp, but deploys to Maven repositories.
 
 [![Build Status](https://travis-ci.org/micha149/gulp-maven-deploy.svg?branch=master)](https://travis-ci.org/micha149/gulp-maven-deploy)
@@ -13,7 +9,7 @@ A [Gulp](//gulpjs.com/) wrapper for the [maven-deploy](https://www.npmjs.org/pac
 
 [![NPM](https://nodei.co/npm/gulp-maven-deploy.png?stars=true&downloads=true)](https://npmjs.org/package/gulp-maven-deploy)
 
-All the samples below require a basic understanding of [Gulp](//gulpjs.com/) and [Maven](http://maven.apache.org/). Please look at the documentation for those projects for details.
+All the samples below require a basic understanding of [Gulp](//gulpjs.com/) and [Maven](http://maven.apache.org/). Please look at the documentation for those projects for details. This readme refers to 1.x versions. If you are still using the 0.x versions, have a look into the [0.x support branch](https://github.com/micha149/gulp-maven-deploy/tree/support/0.x).
 
 ## Installing
 
