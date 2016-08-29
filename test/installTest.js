@@ -3,6 +3,7 @@ var plugin = require('../index.js'),
     sinon = require('sinon'),
     Vinyl = require('vinyl'),
     mavenDeploy = require('maven-deploy'),
+    assign = require('lodash.assign'),
     fs = require('fs');
 
 /* globals describe: false, it: false, beforeEach: false, afterEach: false */
@@ -95,7 +96,7 @@ describe('gulp-maven-deploy plugin', function () {
         });
 
         it('uses provided artifactId', function (done) {
-            var config = Object.assign({}, testConfig);
+            var config = assign({}, testConfig);
             config.artifactId = 'file';
             var stream = plugin.install(config);
             var expectedOptions = {
