@@ -3,6 +3,7 @@ var plugin = require('../index.js'),
     sinon = require('sinon'),
     Vinyl = require('vinyl'),
     mavenDeploy = require('maven-deploy'),
+    assign = require('lodash.assign'),
     fs = require('fs');
 
 /* globals describe: false, it: false, beforeEach: false, afterEach: false */
@@ -83,6 +84,23 @@ describe('gulp-maven-deploy plugin', function () {
             var stream = plugin.install(testConfig);
             var expectedOptions = {
                 artifactId: 'fileA'
+            };
+
+            stream.on('finish', function() {
+                expect(mavenDeploy.config).to.be.calledWith(sinon.match(expectedOptions));
+                done();
+            });
+
+            stream.write(fileA);
+            stream.end();
+        });
+
+        it('uses provided artifactId', function (done) {
+            var config = assign({}, testConfig);
+            config.artifactId = 'file';
+            var stream = plugin.install(config);
+            var expectedOptions = {
+                artifactId: 'file'
             };
 
             stream.on('finish', function() {
