@@ -26,8 +26,8 @@ var gulp = require('gulp'),
     maven = require('gulp-maven-deploy');
     zip = require('gulp-zip');
 
-gulp.task('deploy', function(){
-    gulp.src('.')
+gulp.task('deploy', function() {
+    return gulp.src('.')
         .pipe(zip('my-artifact.war'))
         .pipe(maven.deploy({
             'groupId': 'com.mygroup',
@@ -46,8 +46,8 @@ var gulp = require('gulp'),
     maven = require('gulp-maven-deploy'),
     zip = require('gulp-zip');
 
-gulp.task('deploy-local', function(){
-    gulp.src('.')
+gulp.task('deploy-local', function() {
+    return gulp.src('.')
         .pipe(zip('my-artifact.war'))
         .pipe(maven.install({
             'groupId': 'com.mygroup',
