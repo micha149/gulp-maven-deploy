@@ -12,8 +12,8 @@ module.exports = function deploy(options) {
 
     var stream = through.obj(function (file, enc, fileDone) {
         file = new File(file);
-        var tempFile = temp.createWriteStream(),
-            fileOptions = buildFileOptions(file, options);
+        var fileOptions = buildFileOptions(file, options);
+        var tempFile = temp.createWriteStream({prefix:'.' + {suffix: '.' + fileOptions.type}});
 
         tempFile.on('finish', function() {
             async.each(fileOptions.repositories, function (repo, repoDone) {
